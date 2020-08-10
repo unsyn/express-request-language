@@ -76,7 +76,8 @@ module.exports = function(props) {
     if(typeof queryLanguage === 'string' && queryLanguage.length > 1 &&
         props.languages.indexOf(queryLanguage) !== -1) {
       set(props, req, queryLanguage);
-      if(typeof props.cookie !== 'undefined') {
+      // patch to prevent multiple set-cookie calls in the same request.
+      if(typeof props.cookie !== 'undefined' && req.cookies[props.cookie.name] !== queryLanguage) {
         req.cookies[props.cookie.name] = queryLanguage;
         res.cookie(props.cookie.name, queryLanguage, props.cookie.options);
       }
